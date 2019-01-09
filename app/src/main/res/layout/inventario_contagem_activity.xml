@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvStatusEndCod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Medium"/>
+
+    <EditText
+        android:id="@+id/editEndCod"
+        style="@style/EditTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/endereco" />
+
+    <LinearLayout
+        android:id="@+id/linearBarPreco"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvProduto"
+            android:layout_width="0dp"
+            android:layout_weight=".33"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.Small"
+            android:gravity="center"
+            android:text="@string/produto"/>
+
+        <TextView
+            android:id="@+id/tvPendente"
+            android:layout_width="0dp"
+            android:layout_weight=".33"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.Small"
+            android:gravity="center"
+            android:text="@string/pendente"/>
+
+        <TextView
+            android:id="@+id/tvColetado"
+            android:layout_width="0dp"
+            android:layout_weight=".33"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.Small"
+            android:gravity="center"
+            android:text="@string/coletado"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frameFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".7">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btZerarPendencia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:text="@string/zerar_pendencias"
+            style="@style/ButtonColorWhite"/>
+
+        <Button
+            android:id="@+id/btFecharVoltar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/voltar"
+            style="@style/ButtonColorAccent"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

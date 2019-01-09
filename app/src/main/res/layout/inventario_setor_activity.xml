@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginRight="16dp"
+    android:gravity="center">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/secao"
+        android:textAppearance="@style/TextAppearance.Medium"/>
+
+    <Spinner
+        android:id="@+id/spinnerSecao"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_spinner">
+    </Spinner>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subsecao"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.Medium"/>
+
+    <Spinner
+        android:id="@+id/spinnerSubSecao"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_spinner">
+    </Spinner>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/grupo"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.Medium"/>
+
+    <Spinner
+        android:id="@+id/spinnerGrupo"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_spinner">
+    </Spinner>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subgrupo"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.Medium"/>
+
+    <Spinner
+        android:id="@+id/spinnerSubGrupo"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_spinner">
+    </Spinner>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btVoltar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:text="@string/voltar"
+            style="@style/ButtonColorWhite"/>
+
+        <Button
+            android:id="@+id/btOk"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/ok"
+            style="@style/ButtonColorAccent"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

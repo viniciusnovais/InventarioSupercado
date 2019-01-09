@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/textEnviosPendentes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/holo_red_light"
+        android:text="@string/envio_pendentes"
+        android:textAppearance="@style/TextAppearance.Large"/>
+
+        <Button
+            android:id="@+id/btnContagem"
+            style="@style/ButtonColorPrincipalnventario"
+            android:text="@string/contagem" />
+
+
+        <Button
+            android:id="@+id/btnEnviarContagem"
+            style="@style/ButtonColorPrincipalnventario"
+            android:text="@string/enviar_contagem" />
+
+        <Button
+            android:id="@+id/btnRecontagem"
+            style="@style/ButtonColorPrincipalnventario"
+            android:text="@string/recontagem" />
+
+
+        <Button
+            android:id="@+id/btnEnviarRecontagem"
+            style="@style/ButtonColorPrincipalnventario"
+            android:text="@string/enviar_recontagem" />
+
+
+        <Button
+            android:id="@+id/btnSair"
+            style="@style/ButtonColorPrincipalnventario"
+            android:text="@string/contagem_final" />
+
+</LinearLayout>
