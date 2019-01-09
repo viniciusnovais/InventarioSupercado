@@ -32,22 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextUsuario = findViewById(R.id.etUser);
         editextSenha = findViewById(R.id.etPassword);
         Button btnEntrar = findViewById(R.id.btnEntrar);
-
-//        if (!TextUtils.isEmpty(preferences.getString(getString(R.string.preference_login), ""))) {
-//
-//            Bundle bundle = new Bundle();
-//            bundle.putString(getString(R.string.preference_login), preferences.getString(getString(R.string.preference_login), ""));
-//            bundle.putString(getString(R.string.preference_senha), preferences.getString(getString(R.string.preference_senha), ""));
-//
-//            AsyncTaskLogin taskLogin = new AsyncTaskLogin(LoginActivity.this, bundle);
-//            taskLogin.startTask();
-//            taskLogin.setResultLogin(result -> {
-//                if (result) {
-//                    startActivity(new Intent(LoginActivity.this, AutorizaoActivity.class));
-//                    finish();
-//                }
-//            });
-//        }
+        
 
         btnEntrar.setOnClickListener(v -> {
 
