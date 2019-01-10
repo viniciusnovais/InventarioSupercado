@@ -22,6 +22,7 @@ import java.util.Random;
 
 import pdasolucoes.com.br.inventariosupercado.Dao.DataBase;
 import pdasolucoes.com.br.inventariosupercado.Inventario.Loader.FetchInventario;
+import pdasolucoes.com.br.inventariosupercado.Inventario.Loader.FetchProduto;
 import pdasolucoes.com.br.inventariosupercado.Inventario.Loader.FetchPutFile;
 import pdasolucoes.com.br.inventariosupercado.Model.ColetaItem;
 import pdasolucoes.com.br.inventariosupercado.PrincipalActivity;
@@ -107,13 +108,24 @@ public class PrincipalInvActivity extends PrincipalActivity {
 
             if (text.equals("OK")) {
 
-                Intent i = new Intent(PrincipalInvActivity.this, SetorActivity.class);
+                FetchProduto fetchProduto = new FetchProduto(this,b);
+                fetchProduto.startLoadDivergencia();
+                fetchProduto.setOnResultDivergencia(result -> {
 
-                SharedPreferences.Editor editor = preferencesInv.edit();
-                editor.putInt(getString(R.string.preference_tipo_atividade), Constante.ATIVIDADE_DIVERGENCIA);
-                editor.apply();
+                    if (result > 0){
+                        Intent i = new Intent(PrincipalInvActivity.this, SetorActivity.class);
 
-                startActivity(i);
+                        SharedPreferences.Editor editor = preferencesInv.edit();
+                        editor.putInt(getString(R.string.preference_tipo_atividade), Constante.ATIVIDADE_DIVERGENCIA);
+                        editor.apply();
+
+                        startActivity(i);
+                    }else{
+                        Metodo.popupMensgam(this,getString(R.string.nao_existe_divergencia));
+                    }
+                });
+
+
             } else {
                 Metodo.popupMensgam(PrincipalInvActivity.this, text);
             }

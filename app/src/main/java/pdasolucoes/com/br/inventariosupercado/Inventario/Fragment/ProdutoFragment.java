@@ -170,7 +170,7 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             listarProdutos();
 
 
-        if(listarProduto.size() == 1)
+        if (listarProduto.size() == 1)
             imageRight.setVisibility(View.GONE);
         else
             imageRight.setVisibility(View.VISIBLE);
@@ -189,7 +189,6 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             if (listarProduto.size() > 0)
                 setInfoProduto(listarProduto.get(position));
         });
-
 
 
         imageLeft.setOnClickListener(v12 -> {
@@ -314,7 +313,12 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             String grupo = preferencesFiltro.getString(getString(R.string.grupo), null);
             String subGrupo = preferencesFiltro.getString(getString(R.string.subgrupo), null);
 
-            listarProduto = mDb.produtoDao().listar(secao, subSecao, grupo, subGrupo);
+
+            if (preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                    == Constante.ATIVIDADE_DIVERGENCIA)
+                listarProduto = mDb.produtoDao().listarDiv(secao, subSecao, grupo, subGrupo);
+            else
+                listarProduto = mDb.produtoDao().listar(secao, subSecao, grupo, subGrupo);
 
             pesquisaCodAutomacao();
 
@@ -373,7 +377,11 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             String grupo = preferencesFiltro.getString(getString(R.string.grupo), null);
             String subGrupo = preferencesFiltro.getString(getString(R.string.subgrupo), null);
 
-            listarProduto = mDb.produtoDao().listar(secao, subSecao, grupo, subGrupo);
+            if (preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                    == Constante.ATIVIDADE_DIVERGENCIA)
+                listarProduto = mDb.produtoDao().listarDiv(secao, subSecao, grupo, subGrupo);
+            else
+                listarProduto = mDb.produtoDao().listar(secao, subSecao, grupo, subGrupo);
 
             ((Activity) context).runOnUiThread(() ->
                     {
@@ -465,7 +473,11 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
         }
 
         if (!cadastrado[0])
-            ((Activity) context).runOnUiThread(() -> Metodo.popupMensgam(context, getString(R.string.produto_n_cadastrado)));
+            ((Activity) context).runOnUiThread(() -> {
+
+                Metodo.popupMensgam(context, getString(R.string.produto_n_cadastrado));
+                Metodo.focoEditText(context, editEndCod);
+            });
 
     }
 
@@ -499,8 +511,8 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
                             } else {
                                 if (Float.parseFloat(editQtde.getText().toString()) <= preferencesInv.getFloat(getString(R.string.preference_qtde_max_cont), 5000))
                                     verificaFlagAddUp();
-                                else{
-                                    Metodo.focoEditTextComTeclado(context,editQtde);
+                                else {
+                                    Metodo.focoEditTextComTeclado(context, editQtde);
                                     Metodo.popupMensgam(context, getString(R.string.quantidade_excedida));
                                 }
                             }
@@ -517,9 +529,9 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
                             if (Float.parseFloat(editQtde.getText().toString().concat(".").concat(editDecimal.getText().toString()))
                                     <= preferencesInv.getFloat(getString(R.string.preference_qtde_max_cont), 5000))
                                 verificaFlagAddUp();
-                            else{
+                            else {
                                 editDecimal.setText("");
-                                Metodo.focoEditTextComTeclado(context,editQtde);
+                                Metodo.focoEditTextComTeclado(context, editQtde);
                                 Metodo.popupMensgam(context, getString(R.string.quantidade_excedida));
                             }
                         }
@@ -539,7 +551,7 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             AppExecutors.getsInstance().diskIO().execute(() -> {
 
                 if (mDb.coletaItemDao().existeColeta(produto.getCodSku()
-                        ,preferencesInv.getInt(getString(R.string.preference_id_endereco),-1)) == 1) {
+                        , preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)) == 1) {
                     mDb.coletaItemDao().deletar(produto.getCodSku());
                     adicionarColeta(1);
                 } else {

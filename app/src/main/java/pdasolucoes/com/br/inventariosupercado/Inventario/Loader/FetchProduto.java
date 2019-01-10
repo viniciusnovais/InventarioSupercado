@@ -33,9 +33,18 @@ public class FetchProduto {
     private Context context;
     private Bundle bundle;
     private ResultProduto resultProduto;
+    private ResultDivergencia resultDivergencia;
 
     public interface ResultProduto {
         void onResult(int result);
+    }
+
+    public interface ResultDivergencia{
+        void onResult(int result);
+    }
+
+    public void setOnResultDivergencia(ResultDivergencia resultDivergencia){
+        this.resultDivergencia = resultDivergencia;
     }
 
     public void setOnResult(ResultProduto result) {
@@ -45,6 +54,11 @@ public class FetchProduto {
     public FetchProduto(Context context, Bundle bundle) {
         this.context = context;
         this.bundle = bundle;
+    }
+
+    public void startLoadDivergencia(){
+
+        new AsynGetDivergencia().execute();
     }
 
     public void startLoadFileProduto() {
@@ -202,6 +216,52 @@ public class FetchProduto {
                     resultProduto.onResult(0);
                     Metodo.toastMsg(context, o.toString());
                 }
+            }
+        }
+    }
+
+    private class AsynGetDivergencia extends AsyncTask{
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = Metodo.progressDialogCarregamento(context);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            try {
+                return new InventarioService(context).GetDivergencia(
+                        bundle.getInt(context.getString(R.string.bundle_id_inventario)));
+            } catch (Exception e) {
+                return e;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            if (progressDialog.isShowing()){
+                progressDialog.dismiss();
+
+                if (!(o instanceof Exception)){
+
+                    if (Long.parseLong(o.toString()) > 0){
+                        resultDivergencia.onResult(1);
+                    }else{
+                       resultDivergencia.onResult(0);
+                    }
+
+                }else{
+                    Metodo.toastMsg(context,o.toString());
+                }
+
             }
         }
     }

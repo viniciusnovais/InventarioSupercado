@@ -38,24 +38,29 @@
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".ConfiguracaoActivity">
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:label="@string/autorizacao"
             android:name=".Inventario.AutorizaoActivity">
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:label="@string/principal"
             android:name=".Inventario.PrincipalInvActivity">
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:label="@string/contagem"
             android:name=".Inventario.ContagemAcitivity"/>
 
         <activity
+            android:screenOrientation="portrait"
             android:label="@string/setor"
             android:name=".Inventario.SetorActivity"/>
 

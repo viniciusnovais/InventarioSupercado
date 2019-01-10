@@ -3,6 +3,7 @@ package pdasolucoes.com.br.inventariosupercado.Inventario.Loader;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleService;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.widget.ProgressBar;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import pdasolucoes.com.br.inventariosupercado.Dao.DataBase;
 import pdasolucoes.com.br.inventariosupercado.R;
+import pdasolucoes.com.br.inventariosupercado.Util.Constante;
 import pdasolucoes.com.br.inventariosupercado.Util.Metodo;
 
 public class CallListString {
@@ -68,19 +70,33 @@ public class CallListString {
         @Override
         protected Object doInBackground(Object[] objects) {
 
+            SharedPreferences preferencesInv = context.getSharedPreferences(context.getString(R.string.preference_inv), Context.MODE_PRIVATE);
             switch (tipoFiltro) {
 
                 case SECAO:
-                    listaSecaoSub.addAll(dataBase.produtoDao().listarSecao());
+
+                    if (preferencesInv.getInt(context.getString(R.string.preference_tipo_atividade), -1) == Constante.ATIVIDADE_DIVERGENCIA)
+                        listaSecaoSub.addAll(dataBase.produtoDao().listarSecaoDiv());
+                    else
+                        listaSecaoSub.addAll(dataBase.produtoDao().listarSecao());
                     return listaSecaoSub;
                 case SUBSECAO:
-                    listaSecaoSub.addAll(dataBase.produtoDao().listarSubSecao(filtro));
+                    if (preferencesInv.getInt(context.getString(R.string.preference_tipo_atividade), -1) == Constante.ATIVIDADE_DIVERGENCIA)
+                        listaSecaoSub.addAll(dataBase.produtoDao().listarSubSecaoDiv(filtro));
+                    else
+                        listaSecaoSub.addAll(dataBase.produtoDao().listarSubSecao(filtro));
                     return listaSecaoSub;
                 case GRUPO:
-                    lista.addAll(dataBase.produtoDao().listarGrupo(filtro));
+                    if (preferencesInv.getInt(context.getString(R.string.preference_tipo_atividade), -1) == Constante.ATIVIDADE_DIVERGENCIA)
+                        lista.addAll(dataBase.produtoDao().listarGrupoDiv(filtro));
+                    else
+                        lista.addAll(dataBase.produtoDao().listarGrupo(filtro));
                     return lista;
                 case SUBGRUPO:
-                    lista.addAll(dataBase.produtoDao().listarSubGrupo(filtro));
+                    if (preferencesInv.getInt(context.getString(R.string.preference_tipo_atividade), -1) == Constante.ATIVIDADE_DIVERGENCIA)
+                        lista.addAll(dataBase.produtoDao().listarSubGrupoDiv(filtro));
+                    else
+                        lista.addAll(dataBase.produtoDao().listarSubGrupo(filtro));
                     return lista;
                 default:
                     return lista;

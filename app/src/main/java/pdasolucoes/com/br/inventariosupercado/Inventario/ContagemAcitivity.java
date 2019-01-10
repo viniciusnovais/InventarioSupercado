@@ -317,7 +317,11 @@ public class ContagemAcitivity extends PrincipalActivity {
             if (preferencesInv.getInt(context.getString(R.string.invEnderecoAberto), -1)
                     == Constante.ENDERECO_ABERTO) {
 
-                int qtdeTotalProdutos = mDb.produtoDao().qtdeTotalProdutos(secao,subSecao,grupo,subGrupo);
+                int qtdeTotalProdutos;
+                if (tipoAtividade == Constante.ATIVIDADE_DIVERGENCIA)
+                    qtdeTotalProdutos = mDb.produtoDao().qtdeTotalProdutosDiv(secao,subSecao,grupo,subGrupo);
+                else
+                    qtdeTotalProdutos = mDb.produtoDao().qtdeTotalProdutos(secao,subSecao,grupo,subGrupo);
                 int qtdeProdutosContados = mDb.coletaItemDao().qtdeProdutosContadosPorEndereco(idEndereco, tipoAtividade);
                 ((Activity) context).runOnUiThread(() -> tvStatusEndCod.setText(String.format(Locale.getDefault(), "%d", qtdeProdutosContados)
                         .concat(" - ").concat(String.format(Locale.getDefault(), "%d", qtdeTotalProdutos))));
@@ -380,12 +384,25 @@ public class ContagemAcitivity extends PrincipalActivity {
                 String grupo = preferencesFiltro.getString(getString(R.string.grupo), null);
                 String subGrupo = preferencesFiltro.getString(getString(R.string.subgrupo), null);
 
-                for (Produto produto : mDb.produtoDao().listarPendente(preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)
-                        , preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
-                        , secao
-                        , subSecao
-                        , grupo
-                        , subGrupo)) {
+                List<Produto> lista;
+
+                if (preferencesInv.getInt(getString(R.string.preference_tipo_atividade),-1)
+                        ==Constante.ATIVIDADE_DIVERGENCIA)
+                    lista = mDb.produtoDao().listarPendenteDiv(preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)
+                            , preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                            , secao
+                            , subSecao
+                            , grupo
+                            , subGrupo);
+                else
+                    lista = mDb.produtoDao().listarPendente(preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)
+                            , preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                            , secao
+                            , subSecao
+                            , grupo
+                            , subGrupo);
+
+                for (Produto produto : lista) {
 
                     ColetaItem coletaItem = new ColetaItem(produto.getCodSku()
                             , produto.getCodAutomacao()

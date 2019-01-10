@@ -206,6 +206,7 @@ public class AutorizaoActivity extends PrincipalActivity
             mDb.setorDao().deletar();
             mDb.produtoDao().deletar();
             mDb.coletaItemDao().deletar();
+            mDb.divergenciaDao().deletar();
         });
     }
 

@@ -23,6 +23,7 @@ import java.util.Objects;
 import pdasolucoes.com.br.inventariosupercado.Dao.DataBase;
 import pdasolucoes.com.br.inventariosupercado.Inventario.Adapter.ListaProdPendenteAdapter;
 import pdasolucoes.com.br.inventariosupercado.Inventario.ContagemAcitivity;
+import pdasolucoes.com.br.inventariosupercado.Inventario.Interface.ItemFoco;
 import pdasolucoes.com.br.inventariosupercado.Model.Produto;
 import pdasolucoes.com.br.inventariosupercado.R;
 import pdasolucoes.com.br.inventariosupercado.Util.AppExecutors;
@@ -51,7 +52,7 @@ public class PendenteFragment extends Fragment {
         if (getContext() != null)
             context = getContext();
 
-        preferencesFiltro = context.getSharedPreferences(getString(R.string.filtros),Context.MODE_PRIVATE);
+        preferencesFiltro = context.getSharedPreferences(getString(R.string.filtros), Context.MODE_PRIVATE);
 
         mDb = DataBase.getInstancia(context);
         preferencesInv = context.getSharedPreferences(getString(R.string.preference_inv), Context.MODE_PRIVATE);
@@ -87,13 +88,27 @@ public class PendenteFragment extends Fragment {
             String grupo = preferencesFiltro.getString(getString(R.string.grupo), null);
             String subGrupo = preferencesFiltro.getString(getString(R.string.subgrupo), null);
 
-            List<Produto> lista = mDb.produtoDao().listarPendente(
-                    preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)
-                    , preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
-                    , secao
-                    , subSecao
-                    , grupo
-                    , subGrupo);
+            List<Produto> lista;
+
+            if (preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                    == Constante.ATIVIDADE_DIVERGENCIA)
+                lista = mDb.produtoDao().listarPendenteDiv(
+                        preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)
+                        , preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                        , secao
+                        , subSecao
+                        , grupo
+                        , subGrupo);
+            else
+                lista = mDb.produtoDao().listarPendente(
+                        preferencesInv.getInt(getString(R.string.preference_id_endereco), -1)
+                        , preferencesInv.getInt(getString(R.string.preference_tipo_atividade), -1)
+                        , secao
+                        , subSecao
+                        , grupo
+                        , subGrupo);
+
+
             adapter = new ListaProdPendenteAdapter(context, lista);
             adapter.setOnClickListener(position -> {
                 Produto p = lista.get(position);

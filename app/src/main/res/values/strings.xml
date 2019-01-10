@@ -6,7 +6,7 @@
     <string name="usuario_dois_pontos">Usuário:</string>
     <string name="modulo_dois_pontos">Módulo:</string>
     <string name="perfil_dois_pontos">Perfil:</string>
-    <string name="versao">Versão: 1.0.0</string>
+    <string name="versao">Versão: 1.0.2</string>
     <string name="powered">Powered by:</string>
     <string name="configuracoes">Configurações</string>
     <string name="cancelar">Cancelar</string>
@@ -125,6 +125,7 @@
     <string name="ip_servidor">10.1.100.26</string>
     <string name="diretorio_name">ws</string>
     <string name="verificando_atualizacao">Verificando atualização...</string>
+    <string name="nao_existe_divergencia">Não existe divergência</string>
 
 
     <string-array name="array_coleta">

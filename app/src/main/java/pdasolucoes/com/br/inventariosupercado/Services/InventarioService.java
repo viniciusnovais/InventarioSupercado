@@ -29,8 +29,10 @@ import java.util.Locale;
 
 import pdasolucoes.com.br.inventariosupercado.Dao.DataBase;
 import pdasolucoes.com.br.inventariosupercado.Model.Departamento;
+import pdasolucoes.com.br.inventariosupercado.Model.Divergencia;
 import pdasolucoes.com.br.inventariosupercado.Model.Endereco;
 import pdasolucoes.com.br.inventariosupercado.Model.Inventario;
+import pdasolucoes.com.br.inventariosupercado.Model.Produto;
 import pdasolucoes.com.br.inventariosupercado.Model.Setor;
 import pdasolucoes.com.br.inventariosupercado.R;
 
@@ -48,6 +50,7 @@ public class InventarioService {
     private static String METHOD_PRODUTO = "GetProduto";
     private static String METHOD_PUT_FILE = "PutFile";
     private static String METHOD_GET_INV_PENDENCIA = "GetPendenciasInventario";
+    private static String METHOD_GET_DIVERGENCIA = "GetDivergencia";
     private static DataBase dataBase;
 
     public InventarioService(Context context) {
@@ -258,8 +261,42 @@ public class InventarioService {
 
         if (response.toString().equals("anyType{}"))
             return "OK";
-        return ((SoapObject)response.getProperty(0)).getPropertyAsString("DESCRICAO");
+        return ((SoapObject) response.getProperty(0)).getPropertyAsString("DESCRICAO");
 
+    }
+
+    public static long GetDivergencia(int idInventario) throws Exception {
+
+        SoapObject soapObject = new SoapObject(NAMESPACE, METHOD_GET_DIVERGENCIA);
+
+        soapObject.addProperty("idInventario", idInventario);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.implicitTypes = true;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE transportSE = new HttpTransportSE(URL);
+        transportSE.call(NAMESPACE + METHOD_GET_DIVERGENCIA, envelope);
+
+        SoapObject response = (SoapObject) envelope.getResponse();
+
+        dataBase.divergenciaDao().deletar();
+
+        long cnt = 0;
+        for (int i = 0; i < response.getPropertyCount(); i++) {
+            SoapObject item = (SoapObject) response.getProperty(i);
+
+            Divergencia divergencia = new Divergencia(
+                    item.getPropertyAsString("EAN")
+                    , item.getPropertyAsString("CodigoProduto")
+                    , idInventario);
+
+            cnt += dataBase.divergenciaDao().insert(divergencia);
+        }
+
+
+        return cnt;
     }
 
     public void PutFile(File file, String filename) throws Exception {
