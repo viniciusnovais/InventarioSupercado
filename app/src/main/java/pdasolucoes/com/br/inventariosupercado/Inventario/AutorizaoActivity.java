@@ -239,7 +239,10 @@ public class AutorizaoActivity extends PrincipalActivity
             i.putExtra(getString(R.string.autorizacao), autorizacao);
             startActivity(i);
         } else {
-            Metodo.toastMsg(this, getString(R.string.erro_importacao));
+            deletar();
+            clearPreferencesInv();
+
+            Metodo.popupMensgam(this, getString(R.string.estoque_produtos_zerados));
         }
     }
 }

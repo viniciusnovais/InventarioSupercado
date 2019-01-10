@@ -170,6 +170,11 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             listarProdutos();
 
 
+        if(listarProduto.size() == 1)
+            imageRight.setVisibility(View.GONE);
+        else
+            imageRight.setVisibility(View.VISIBLE);
+
         imageLeft.setVisibility(View.GONE);
         imageRight.setOnClickListener(v1 -> {
 
@@ -184,6 +189,8 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
             if (listarProduto.size() > 0)
                 setInfoProduto(listarProduto.get(position));
         });
+
+
 
         imageLeft.setOnClickListener(v12 -> {
 
@@ -346,6 +353,7 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
                     editDecimal.setText("");
                     Metodo.focoEditText(context, editEndCod);
                     Metodo.toastMsg(context, getString(R.string.salvo_com_sucesso));
+                    produto = new Produto();
                 });
             } catch (Exception e) {
                 ((Activity) context).runOnUiThread(() -> Metodo.toastMsg(context, getString(R.string.problema_ao_salvar)));
@@ -468,6 +476,7 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
         editor.putInt(getString(R.string.preference_inv_contagem), invMetodoContagem);
         editor.putInt(getString(R.string.preference_inv_auditoria), invMetodoAuditoria);
         editor.putString(getString(R.string.preference_nome_secao), endereco.getDepartamento());
+        editor.putFloat(getString(R.string.preference_qtde_max_cont), endereco.getQuantidade());
         editor.putInt(getString(R.string.tipo_leitura), tipoLeitura);
         editor.apply();
     }
@@ -477,17 +486,23 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
+
                 if (v.getId() == R.id.editQtde) {
 
                     if (editDecimal.getVisibility() == View.VISIBLE) {
-                        Metodo.focoEditTextComTecladoSemApagar(context,editDecimal);
+                        Metodo.focoEditTextComTecladoSemApagar(context, editDecimal);
                     } else {
                         if (!editQtde.getText().toString().equals("")) {
                             if (produto.getCodAutomacao() == null) {
                                 editQtde.setText("");
                                 Metodo.popupMensgam(context, getString(R.string.informe_o_produto));
                             } else {
-                                verificaFlagAddUp();
+                                if (Float.parseFloat(editQtde.getText().toString()) <= preferencesInv.getFloat(getString(R.string.preference_qtde_max_cont), 5000))
+                                    verificaFlagAddUp();
+                                else{
+                                    Metodo.focoEditTextComTeclado(context,editQtde);
+                                    Metodo.popupMensgam(context, getString(R.string.quantidade_excedida));
+                                }
                             }
                         }
                     }
@@ -499,7 +514,14 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
                             editDecimal.setText("");
                             Metodo.popupMensgam(context, getString(R.string.informe_o_produto));
                         } else {
-                            verificaFlagAddUp();
+                            if (Float.parseFloat(editQtde.getText().toString().concat(".").concat(editDecimal.getText().toString()))
+                                    <= preferencesInv.getFloat(getString(R.string.preference_qtde_max_cont), 5000))
+                                verificaFlagAddUp();
+                            else{
+                                editDecimal.setText("");
+                                Metodo.focoEditTextComTeclado(context,editQtde);
+                                Metodo.popupMensgam(context, getString(R.string.quantidade_excedida));
+                            }
                         }
                     }
                 }
@@ -516,7 +538,8 @@ public class ProdutoFragment extends Fragment implements View.OnKeyListener, Com
 
             AppExecutors.getsInstance().diskIO().execute(() -> {
 
-                if (mDb.coletaItemDao().existeColeta(produto.getCodSku()) == 1) {
+                if (mDb.coletaItemDao().existeColeta(produto.getCodSku()
+                        ,preferencesInv.getInt(getString(R.string.preference_id_endereco),-1)) == 1) {
                     mDb.coletaItemDao().deletar(produto.getCodSku());
                     adicionarColeta(1);
                 } else {

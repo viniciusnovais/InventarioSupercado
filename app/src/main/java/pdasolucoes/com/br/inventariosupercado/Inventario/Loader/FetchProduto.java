@@ -200,7 +200,7 @@ public class FetchProduto {
                     resultProduto.onResult(Integer.parseInt(o.toString()));
                 } else {
                     resultProduto.onResult(0);
-                    Metodo.popupMensgam(context, o.toString());
+                    Metodo.toastMsg(context, o.toString());
                 }
             }
         }

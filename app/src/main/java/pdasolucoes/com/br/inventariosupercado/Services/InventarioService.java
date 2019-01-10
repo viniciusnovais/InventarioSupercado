@@ -52,7 +52,7 @@ public class InventarioService {
 
     public InventarioService(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.pref_configuracoes), Context.MODE_PRIVATE);
-        URL = "http://" + preferences.getString(context.getString(R.string.pref_servidor), "") + "/" + preferences.getString(context.getString(R.string.pref_diretorio), "") + "/" + "wsinventario.asmx";
+        URL = "http://" + preferences.getString(context.getString(R.string.pref_servidor), context.getString(R.string.ip_servidor)) + "/" + preferences.getString(context.getString(R.string.pref_diretorio), context.getString(R.string.diretorio_name)) + "/" + "wsinventario.asmx";
 
         dataBase = DataBase.getInstancia(context);
 

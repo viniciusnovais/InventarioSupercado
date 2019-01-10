@@ -32,9 +32,9 @@ public class ConfiguracaoActivity extends AppCompatActivity {
         Button btConfirmar = findViewById(R.id.btnOkConfig);
 
         preferences = getSharedPreferences(getString(R.string.pref_configuracoes), MODE_PRIVATE);
-        editServidor.setText(preferences.getString(getString(R.string.pref_servidor), ""));
-        editDiretorio.setText(preferences.getString(getString(R.string.pref_diretorio), ""));
-        editFilial.setText(preferences.getString(getString(R.string.pref_filial), ""));
+        editServidor.setText(preferences.getString(getString(R.string.pref_servidor), getString(R.string.ip_servidor)));
+        editDiretorio.setText(preferences.getString(getString(R.string.pref_diretorio), getString(R.string.diretorio_name)));
+        editFilial.setText(preferences.getString(getString(R.string.pref_filial), "-1"));
 
 
         btCancelar.setOnClickListener(v -> finish());

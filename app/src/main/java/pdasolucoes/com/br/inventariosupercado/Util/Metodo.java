@@ -96,6 +96,16 @@ public class Metodo {
         return progressDialog;
     }
 
+    public static ProgressDialog progressDialogCarregamentoMsg(Context context,String msg) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage(msg);
+        progressDialog.setCanceledOnTouchOutside(true);
+        progressDialog.setCancelable(false);
+
+        return progressDialog;
+    }
+
     public static void popupMensgam(Context context, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.msg));

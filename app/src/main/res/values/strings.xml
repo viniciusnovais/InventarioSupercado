@@ -119,6 +119,12 @@
     <string name="n_existe_pendenciq">Não existem pendências</string>
     <string name="existe_pendencias_na_contagem">Existe contagem pendente</string>
     <string name="decimal">Decimal</string>
+    <string name="estoque_produtos_zerados">Produtos parametrizados com estoque zerado</string>
+    <string name="preference_qtde_max_cont">preference_qtde_max_cont</string>
+    <string name="quantidade_excedida">Quantidade excedida</string>
+    <string name="ip_servidor">10.1.100.26</string>
+    <string name="diretorio_name">ws</string>
+    <string name="verificando_atualizacao">Verificando atualização...</string>
 
 
     <string-array name="array_coleta">

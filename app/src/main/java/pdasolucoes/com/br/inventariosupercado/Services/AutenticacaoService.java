@@ -23,7 +23,7 @@ public class AutenticacaoService {
     public AutenticacaoService(Context context) {
 
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.pref_configuracoes), Context.MODE_PRIVATE);
-        URL = "http://" + preferences.getString(context.getString(R.string.pref_servidor), "") + "/" + preferences.getString(context.getString(R.string.pref_diretorio), "") + "/" + "Autenticacao.asmx";
+        URL = "http://" + preferences.getString(context.getString(R.string.pref_servidor), context.getString(R.string.ip_servidor)) + "/" + preferences.getString(context.getString(R.string.pref_diretorio), context.getString(R.string.diretorio_name)) + "/" + "Autenticacao.asmx";
 
     }
 

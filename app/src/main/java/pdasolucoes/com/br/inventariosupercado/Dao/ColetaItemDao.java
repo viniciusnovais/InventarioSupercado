@@ -49,8 +49,8 @@ public interface ColetaItemDao {
     @Query("DELETE FROM PDA_TB_COLETA_ITEM WHERE export = "+Constante.FLAG_EXPORT_REALIZADO)
     void deletar();
 
-    @Query("SELECT 1 FROM PDA_TB_COLETA_ITEM WHERE codSku = :codSku")
-    int existeColeta(String codSku);
+    @Query("SELECT 1 FROM PDA_TB_COLETA_ITEM WHERE codSku = :codSku AND idEndereco =:idEndereco limit 1")
+    int existeColeta(String codSku,int idEndereco);
 
     @Query("SELECT COUNT(countCodSku) FROM (SELECT COUNT(codSku) countCodSku FROM PDA_TB_COLETA_ITEM WHERE IDINVENTARIO = :idInventario AND EXPORT = "+Constante.FLAG_EXPORT_PENDENTE+" GROUP BY codSku)")
     int enviosPendentes(int idInventario);
