@@ -51,7 +51,7 @@ public abstract class PrincipalActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(getString(R.string.preference_desc_perfil), b.getString("descPerfil"));
                 editor.putString(getString(R.string.preference_nome_usuario), b.getString("nome"));
-                editor.putInt(getString(R.string.preference_cod_usuario), b.getInt("ipServidor"));
+                editor.putInt(getString(R.string.preference_cod_usuario), b.getInt("codUsuario"));
                 editor.putInt(getString(R.string.preference_cod_perfil), b.getInt("codPerfil"));
                 editor.putString(getString(R.string.preference_nome_filial), b.getString("nomeFilial"));
                 editor.putString(getString(R.string.preference_cod_filial), b.getString("codFilial"));
