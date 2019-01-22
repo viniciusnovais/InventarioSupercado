@@ -1,10 +1,15 @@
 package pdasolucoes.com.br.inventariosupercado.Inventario;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.FontResourcesParserCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +19,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import pdasolucoes.com.br.inventariosupercado.Dao.DataBase;
@@ -32,6 +46,7 @@ import pdasolucoes.com.br.inventariosupercado.PrincipalActivity;
 import pdasolucoes.com.br.inventariosupercado.R;
 import pdasolucoes.com.br.inventariosupercado.Util.AppExecutors;
 import pdasolucoes.com.br.inventariosupercado.Util.Metodo;
+import pdasolucoes.com.br.inventariosupercado.Util.XmlParser;
 
 public class AutorizaoActivity extends PrincipalActivity
         implements FetchInventario.GetInventario
@@ -46,10 +61,14 @@ public class AutorizaoActivity extends PrincipalActivity
     int idInventario = 0;
     String autorizacao = "";
 
+    SharedPreferences preferencesConfig;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inventario_autorizacao_activity);
+
+        preferencesConfig = getSharedPreferences(getString(R.string.pref_configuracoes),MODE_PRIVATE);
 
         mDb = DataBase.getInstancia(this);
 
@@ -73,12 +92,6 @@ public class AutorizaoActivity extends PrincipalActivity
         });
 
         btVoltar.setOnClickListener(v -> {
-//            SharedPreferences preferences = getSharedPreferences(getString(R.string.preference_login_file), MODE_PRIVATE);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.clear();
-//            editor.apply();
-            Intent i = new Intent(AutorizaoActivity.this,LoginActivity.class);
-            startActivity(i);
             finish();
         });
 
@@ -88,6 +101,10 @@ public class AutorizaoActivity extends PrincipalActivity
             clearPreferencesInv();
             runOnUiThread(() -> Metodo.toastMsg(AutorizaoActivity.this,getString(R.string.base_limpa)));
         });
+
+        UpdateApp updateApp = new UpdateApp();
+        updateApp.execute();
+
     }
 
     private void clearPreferencesInv(){
@@ -129,6 +146,7 @@ public class AutorizaoActivity extends PrincipalActivity
             i.putExtra(getString(R.string.preference_id_inventario), inventario.getId());
             i.putExtra(getString(R.string.autorizacao), inventario.getAutorizacao());
             startActivity(i);
+            finish();
         } else {
 
             runOnUiThread(this::Importanto);
@@ -245,5 +263,112 @@ public class AutorizaoActivity extends PrincipalActivity
 
             Metodo.popupMensgam(this, getString(R.string.estoque_produtos_zerados));
         }
+    }
+
+    private class UpdateApp extends AsyncTask<String, Void, String> {
+        String PATH;
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = Metodo.progressDialogCarregamentoMsg(AutorizaoActivity.this, getString(R.string.verificando_atualizacao));
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            try {
+
+                if (update()) {
+                    InputStream is;
+                    URL url = new URL(("http://" + preferencesConfig.getString(getString(R.string.pref_servidor), getString(R.string.ip_servidor)) + "/" + preferencesConfig.getString(getString(R.string.pref_diretorio), getString(R.string.diretorio_name)) + "/atualizacao/inventario.apk"));
+                    URLConnection c = url.openConnection();
+
+                    PATH = Environment.getExternalStorageDirectory() + "/"
+                            + Environment.DIRECTORY_DOWNLOADS + "/";
+                    File file = new File(PATH);
+                    file.mkdirs();
+                    File outputFile = new File(file, "inventario.apk");
+                    if (outputFile.exists()) {
+                        outputFile.delete();
+                    }
+                    FileOutputStream fos = new FileOutputStream(outputFile);
+
+                    is = c.getInputStream();
+
+                    byte[] buffer = new byte[1024];
+                    int len1;
+                    while ((len1 = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, len1);
+                    }
+                    fos.close();
+                    is.close();
+                }
+
+            } catch (Exception e) {
+                Log.e("UpdateAPP", "Update error! " + e.getMessage());
+            }
+            return PATH;
+        }
+
+
+        @Override
+        protected void onPostExecute(final String s) {
+            super.onPostExecute(s);
+
+
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+                if (s != null) {
+
+                    try {
+
+                        Uri uri;
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        if (android.os.Build.VERSION.SDK_INT > 23) {
+                            uri = FileProvider.getUriForFile(AutorizaoActivity.this, getApplicationContext().getPackageName() + ".provider", new File(s + "inventario.apk"));
+                        } else {
+                            uri = Uri.fromFile(new File(s + "inventario.apk"));
+                        }
+                        intent.setDataAndType(uri, "application/vnd.android.package-archive");
+                        startActivity(intent);
+
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        Metodo.popupMensgam(AutorizaoActivity.this, anfe.getMessage());
+                    }
+
+                }
+            }
+        }
+    }
+
+    private boolean update() {
+
+        XmlParser parser = new XmlParser();
+        String xml = parser.getXmlFromUrl("http://" + preferencesConfig.getString(getString(R.string.pref_servidor), getString(R.string.ip_servidor)) + "/" + preferencesConfig.getString(getString(R.string.pref_diretorio), getString(R.string.diretorio_name)) + "/atualizacao/inventario.xml"); // getting XML
+        Document doc = parser.getDomElement(xml); // getting DOM element
+
+        NodeList nl = doc.getElementsByTagName("AppUpdater");
+
+        Element e = (Element) nl.item(0);
+
+        try {
+            String versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+
+            if (!versionName.equals(parser.getValue(e, "latestVersionCode"))) {
+                return true;
+            }
+
+        } catch (PackageManager.NameNotFoundException e1) {
+            e1.printStackTrace();
+        }
+
+        return false;
     }
 }
