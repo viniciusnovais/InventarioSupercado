@@ -6,12 +6,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -23,9 +26,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,6 +59,7 @@ import pdasolucoes.com.br.inventariosupercado.Model.Produto;
 import pdasolucoes.com.br.inventariosupercado.PrincipalActivity;
 import pdasolucoes.com.br.inventariosupercado.R;
 import pdasolucoes.com.br.inventariosupercado.Util.AppExecutors;
+import pdasolucoes.com.br.inventariosupercado.Util.CaptureActivity;
 import pdasolucoes.com.br.inventariosupercado.Util.Constante;
 import pdasolucoes.com.br.inventariosupercado.Util.Metodo;
 import pdasolucoes.com.br.inventariosupercado.Util.PreLollipop;
@@ -75,6 +83,13 @@ public class ContagemAcitivity extends PrincipalActivity {
     static int focoPosition = 0;
     static TextView tvStatusEndCod;
 
+    FloatingActionButton fab;
+
+    FrameLayout rootlayout;
+
+    int _xDelta;
+    int _yDelta;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +105,7 @@ public class ContagemAcitivity extends PrincipalActivity {
         btFecharVoltar = findViewById(R.id.btFecharVoltar);
         btZerarPendente = findViewById(R.id.btZerarPendencia);
         tvStatusEndCod = findViewById(R.id.tvStatusEndCod);
+        fab = findViewById(R.id.fab);
 
         PreLollipop.setVectorForPreLollipop(editEndCod, R.drawable.ic_search, this, Constante.DRAWABLE_RIGHT);
 
@@ -97,7 +113,7 @@ public class ContagemAcitivity extends PrincipalActivity {
         mDb = DataBase.getInstancia(ContagemAcitivity.this);
 
         ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA}, REQUEST_CODE);
 
         AppExecutors.getsInstance().diskIO().execute(() -> inventario = mDb.inventarioDao().retornaDadosInventario());
 
@@ -159,6 +175,30 @@ public class ContagemAcitivity extends PrincipalActivity {
             else
                 finish();
         });
+
+        fab.setOnClickListener(v -> {
+            IntentIntegrator integrator = new IntentIntegrator(ContagemAcitivity.this);
+            integrator.setCaptureActivity(CaptureActivity.class);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            integrator.setOrientationLocked(false);
+            integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+            integrator.setBeepEnabled(true);
+            integrator.initiateScan();
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (scanResult != null) {
+            String barcode = scanResult.getContents();
+            if (barcode != null && !"".equals(barcode)) {
+                requestEndCod(barcode);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void requestEndCod(String endCod) {
@@ -341,7 +381,7 @@ public class ContagemAcitivity extends PrincipalActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frameFragment, f)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private void limparArquivoPref() {

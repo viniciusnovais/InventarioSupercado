@@ -1,6 +1,7 @@
 package pdasolucoes.com.br.inventariosupercado;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ public abstract class PrincipalActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getBundleExtra("bundle");
 
-        if (context.getTitle().toString().equals(getString(R.string.autorizacao))){
+        if (context.getTitle().toString().equals(getString(R.string.autorizacao))) {
             if (b != null) {
 
                 SharedPreferences.Editor editor = preferences.edit();
@@ -63,8 +64,11 @@ public abstract class PrincipalActivity extends AppCompatActivity {
                 editorConfig.putString(getString(R.string.pref_diretorio), b.getString("diretorioName"));
 
                 editorConfig.apply();
-            }else{
-                finish();
+            } else {
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("br.com.pdasolucoes.principal");
+                if (launchIntent != null) {
+                    startActivity(launchIntent);
+                }
             }
         }
 

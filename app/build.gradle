@@ -8,8 +8,8 @@ android {
         applicationId "pdasolucoes.com.br.inventariosupercado"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,7 +36,10 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'commons-codec:commons-codec:1.10'
     implementation files('libs/ksoap2-android-assembly-3.5.0-jar-with-dependencies.jar')
+    implementation 'com.google.zxing:core:3.2.1'
+    implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
 }
