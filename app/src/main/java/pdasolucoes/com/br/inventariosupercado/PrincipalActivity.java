@@ -46,7 +46,7 @@ public abstract class PrincipalActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getBundleExtra("bundle");
 
-        if (context.getTitle().toString().equals(getString(R.string.autorizacao))) {
+        if (context.getTitle().toString().equals(getString(R.string.pda_inventario))) {
             if (b != null) {
 
                 SharedPreferences.Editor editor = preferences.edit();

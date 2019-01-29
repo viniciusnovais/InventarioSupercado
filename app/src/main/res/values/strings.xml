@@ -6,7 +6,7 @@
     <string name="usuario_dois_pontos">Usuário:</string>
     <string name="modulo_dois_pontos">Módulo:</string>
     <string name="perfil_dois_pontos">Perfil:</string>
-    <string name="versao">Versão: 1.0.4</string>
+    <string name="versao">Versão: 1.0.5</string>
     <string name="powered">Powered by:</string>
     <string name="configuracoes">Configurações</string>
     <string name="cancelar">Cancelar</string>
@@ -127,6 +127,7 @@
     <string name="verificando_atualizacao">Verificando atualização...</string>
     <string name="nao_existe_divergencia">Não existe divergência</string>
     <string name="problema_autenticacao">Problema na autenticação</string>
+    <string name="pda_inventario">PDA Inventário</string>
 
 
     <string-array name="array_coleta">

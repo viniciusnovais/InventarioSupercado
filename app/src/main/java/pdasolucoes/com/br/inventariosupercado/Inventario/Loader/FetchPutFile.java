@@ -74,6 +74,8 @@ public class FetchPutFile {
                     }
 
                     Metodo.toastMsg(context,context.getString(R.string.enviado));
+                }else{
+                    Metodo.popupMensgam(context,o.toString());
                 }
             }
         }

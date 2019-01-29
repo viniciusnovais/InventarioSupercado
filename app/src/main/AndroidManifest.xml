@@ -28,7 +28,7 @@
 
         <activity
             android:screenOrientation="portrait"
-            android:label="@string/autorizacao"
+            android:label="@string/pda_inventario"
             android:name=".Inventario.AutorizaoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
